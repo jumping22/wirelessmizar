@@ -1,0 +1,14 @@
+.\enddevice.o: ..\ZIGBEE\EndDevice.c
+.\enddevice.o: ..\ZIGBEE\EndDevice.h
+.\enddevice.o: ..\ZIGBEE\ZProtoAnalyze.h
+.\enddevice.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\enddevice.o: ..\ZIGBEE\zproto.h
+.\enddevice.o: ..\ZIGBEE\types.h
+.\enddevice.o: ..\ZIGBEE\zproto_report.h
+.\enddevice.o: ..\ZIGBEE\zproto_config.h
+.\enddevice.o: ..\ZIGBEE\usrLib.h
+.\enddevice.o: ..\ZIGBEE\EndDeviceNode.h
+.\enddevice.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\enddevice.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+.\enddevice.o: ..\ZIGBEE\EndDevice_type.h
+.\enddevice.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h

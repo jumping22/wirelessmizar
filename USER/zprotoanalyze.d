@@ -1,0 +1,10 @@
+.\zprotoanalyze.o: ..\ZIGBEE\ZProtoAnalyze.c
+.\zprotoanalyze.o: ..\ZIGBEE\ZProtoAnalyze.h
+.\zprotoanalyze.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\zprotoanalyze.o: ..\ZIGBEE\zproto.h
+.\zprotoanalyze.o: ..\ZIGBEE\types.h
+.\zprotoanalyze.o: ..\ZIGBEE\zproto_report.h
+.\zprotoanalyze.o: ..\ZIGBEE\zproto_config.h
+.\zprotoanalyze.o: ..\ZIGBEE\usrLib.h
+.\zprotoanalyze.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\zprotoanalyze.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
