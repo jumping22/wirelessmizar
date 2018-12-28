@@ -6,7 +6,9 @@
 #define MB_RECV_BUF_SIZE		120
 #define MB_HEAD		0xa4
 
-extern unsigned char ShowSensorData_flg;
+
+
+//extern GUI_CONST_STORAGE GUI_FONT GUI_FontFontSong;
 
 extern const char str_Landzo[] ;
 extern const char str_IR_Distance[] ;

@@ -25,8 +25,8 @@ void Show_Large_Key(void);
 
 unsigned char ShowSensorData_flg=0;
 extern uint8_t user_gui_interface;
-
-
+extern uint8_t tim_flg;
+extern unsigned char ShowSensorData_flg;
 
 static void microbit_sensor_deal(void);
 
@@ -502,147 +502,330 @@ void GUI_2DGraphicsOptions(uint8_t ocmd, uint8_t *data, uint8_t length)
 
 void Show_IR_Distance(void)
 {
-	GUI_RECT Rect = { 10, 10, 102, 75 };
-	GUI_SetColor(GUI_LIGHTBLUE);
-	GUI_FillRectEx(&Rect);
-	GUI_SetColor(GUI_RED);
-	//GUI_DispStringInRectWrap("IR_Distance", &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
-	GUI_DispStringInRectWrap(str_Landzo, &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
-	Rect.x0 += 20;
-	Rect.y0 += 20;
-	//GUI_DispStringInRectWrap("somebody!!!", &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
-	GUI_GotoXY(Rect.x0,Rect.y0);
+//	GUI_RECT Rect = { 10, 10, 102, 75 };
+//	GUI_SetColor(GUI_LIGHTBLUE);
+//	GUI_FillRectEx(&Rect);
+//	GUI_SetColor(GUI_RED);
+//	//GUI_DispStringInRectWrap("IR_Distance", &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
+//	GUI_DispStringInRectWrap(str_Landzo, &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
+//	Rect.x0 += 20;
+//	Rect.y0 += 20;
+//	//GUI_DispStringInRectWrap("somebody!!!", &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
+//	GUI_GotoXY(Rect.x0,Rect.y0);
+//	IRdistance_struct ird = wireless->irdistance->get();
+//	GUI_DispDec(ird.distance, 5);
+//	Rect.x0 -= 20;
+//	Rect.y0 -= 20;
+				if(tim_flg==1){
+					
+			GUI_SetFont(&GUI_FontFontSong);
+			GUI_DispStringAt(str_next,5,219);
+			GUI_DispStringAt(str_back, 90, 219);
+			GUI_DispStringAt(str_stop, 185, 219); 
+			GUI_DispStringAt(str_begin, 250, 219);
+			GUI_DrawPolygon(OutPoints, 8, 270, 5);
+			GUI_SetPenSize(1);
+			GUI_SetLineStyle(GUI_LS_DASH);
+			GUI_DrawLine(0, 25, 320, 25);
+			GUI_DrawLine(0, 214, 320, 214);
+			GUI_SetColor(GUI_LIGHTGRAY);
+					
+			GUI_AA_SetFactor(10);
+			GUI_AA_FillRoundedRect(10, 30, 310, 210, 15);
+			GUI_SetTextMode(GUI_TM_TRANS);
+			GUI_SetColor(GUI_BLACK);
+					
+			GUI_SetBkColor(GUI_BLUE);
+			GUI_SetFont(GUI_FONT_20_ASCII);
+			GUI_DispStringAt(str_IR_Distance, 3, 3);
+			GUI_SetBkColor(GUI_BLUE);
+			GUI_ClearRect(25,60,145,180);
+
+			GUI_ClearRect(175, 60, 295, 180);
+			GUI_DispStringAt("ir_remote:", 180, 90);
+				
+				tim_flg = 0;
+		}
+	
+	//GUI_DispStringAt("1", 240, 110);
 	IRdistance_struct ird = wireless->irdistance->get();
-	GUI_DispDec(ird.distance, 5);
-	Rect.x0 -= 20;
-	Rect.y0 -= 20;
+	GUI_GotoXY(220, 130);
+	GUI_DispDec(ird.distance, 4);
 }
 
 void Show_IR_Remote(void)
 {
-	GUI_RECT Rect = { (10+103), 10, (102+103), 75 };
-	GUI_SetColor(GUI_LIGHTBLUE);
-	GUI_FillRectEx(&Rect);
-	GUI_SetColor(GUI_RED);
-	GUI_DispStringInRectWrap(str_IR_Remote, &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
-	Rect.x0 += 20;
-	Rect.y0 += 20;
-	//GUI_DispStringInRectWrap("somebody!!!", &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
-	GUI_GotoXY(Rect.x0, Rect.y0);
+//	GUI_RECT Rect = { (10+103), 10, (102+103), 75 };
+//	GUI_SetColor(GUI_LIGHTBLUE);
+//	GUI_FillRectEx(&Rect);
+//	GUI_SetColor(GUI_RED);
+//	GUI_DispStringInRectWrap(str_IR_Remote, &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
+//	Rect.x0 += 20;
+//	Rect.y0 += 20;
+//	//GUI_DispStringInRectWrap("somebody!!!", &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
+//	GUI_GotoXY(Rect.x0, Rect.y0);
+//	IRremote_struct irr = wireless->irremote->get();
+//	GUI_DispHex(irr.key, 8);
+//	Rect.x0 -= 20;
+//	Rect.y0 -= 20;
+			if(tim_flg==1){
+			GUI_AA_SetFactor(10);
+			GUI_AA_FillRoundedRect(10, 30, 310, 210, 15);
+			GUI_SetTextMode(GUI_TM_TRANS);
+			GUI_SetColor(GUI_BLACK);
+				
+			GUI_SetBkColor(GUI_WHITE);
+			GUI_Clear();
+			GUI_SetBkColor(GUI_BLUE);
+			GUI_SetFont(GUI_FONT_20_ASCII);
+			GUI_DispStringAt(str_IR_Remote, 3, 3);
+			GUI_SetBkColor(GUI_BLUE);
+			GUI_ClearRect(25,60,145,180);
+
+			GUI_ClearRect(175, 60, 295, 180);
+			GUI_DispStringAt("ir_remote:", 180, 90);
+				
+				tim_flg = 0;
+		}
+	
+	//GUI_DispStringAt("1", 240, 110);
 	IRremote_struct irr = wireless->irremote->get();
+	GUI_GotoXY(220, 130);
 	GUI_DispHex(irr.key, 8);
-	Rect.x0 -= 20;
-	Rect.y0 -= 20;
 }
 void Show_PRS(void)
 {
-	GUI_RECT Rect = { (10 + 103+103), 10, (102 + 103+103), 75 };
-	GUI_SetColor(GUI_LIGHTBLUE);
-	GUI_FillRectEx(&Rect);
-	GUI_SetColor(GUI_RED);
-	GUI_DispStringInRectWrap(str_PRS, &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
-	Rect.x0 += 20;
-	Rect.y0 += 20;
-	//GUI_DispStringInRectWrap("somebody!!!", &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
-	GUI_GotoXY(Rect.x0, Rect.y0);
+//	GUI_RECT Rect = { (10 + 103+103), 10, (102 + 103+103), 75 };
+//	GUI_SetColor(GUI_LIGHTBLUE);
+//	GUI_FillRectEx(&Rect);
+//	GUI_SetColor(GUI_RED);
+//	GUI_DispStringInRectWrap(str_PRS, &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
+//	Rect.x0 += 20;
+//	Rect.y0 += 20;
+//	//GUI_DispStringInRectWrap("somebody!!!", &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
+//	GUI_GotoXY(Rect.x0, Rect.y0);
+//	PRS_struct show_prs = wireless->prs->get();
+//	GUI_DispDec(show_prs.analog, 5);
+//	Rect.x0 -= 20;
+//	Rect.y0 -= 20;
+		if(tim_flg==1){
+			GUI_AA_SetFactor(10);
+			GUI_AA_FillRoundedRect(10, 30, 310, 210, 15);
+			GUI_SetTextMode(GUI_TM_TRANS);
+			GUI_SetColor(GUI_BLACK);
+			
+			GUI_SetBkColor(GUI_WHITE);
+			GUI_Clear();
+			GUI_SetBkColor(GUI_BLUE);
+			GUI_SetFont(GUI_FONT_20_ASCII);
+			GUI_DispStringAt(str_PRS, 3, 3);
+			GUI_SetBkColor(GUI_BLUE);
+			GUI_ClearRect(25,60,145,180);
+
+			GUI_ClearRect(175, 60, 295, 180);
+			GUI_DispStringAt("prs:", 210, 110);
+				
+				tim_flg = 0;
+			}
+	
+	//GUI_DispStringAt("1", 240, 110);
 	PRS_struct show_prs = wireless->prs->get();
-	GUI_DispDec(show_prs.analog, 5);
-	Rect.x0 -= 20;
-	Rect.y0 -= 20;
+	GUI_GotoXY(240, 110);
+	GUI_DispDec(show_prs.analog, 4);
+	
 }
 void Show_DHT11(void)
 {
-	GUI_RECT Rect = { 10, (75 + 10), 102, (75 + 10 + 66) };
-	unsigned char i = 0;
-	for (i = 0; i < 3; i++)
-	{
-		GUI_SetColor(GUI_LIGHTYELLOW);
-		GUI_FillRectEx(&Rect);
-		GUI_SetColor(GUI_MAGENTA);
-		Rect.x0 += 20;
-		if (i == 0){
-			GUI_DispStringInRectWrap(str_Landzo, &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
-		}
-		else if (i == 1){
-			
-			DHT11_struct show_dht11 = wireless->dht11->get();
-			GUI_DispStringInRectWrap(str_Dht11, &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
-			Rect.x0 -= 20;
-			Rect.y0 += 20;
-			GUI_DispStringInRectWrap(str_Dht11_temp, &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
+//	GUI_RECT Rect = { 10, (75 + 10), 102, (75 + 10 + 66) };
+//	unsigned char i = 0;
+//	for (i = 0; i < 3; i++)
+//	{
+//		GUI_SetColor(GUI_LIGHTYELLOW);
+//		GUI_FillRectEx(&Rect);
+//		GUI_SetColor(GUI_MAGENTA);
+//		Rect.x0 += 20;
+//		if (i == 0){
+//			GUI_DispStringInRectWrap(str_Landzo, &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
+//		}
+//		else if (i == 1){
+//			
+//			DHT11_struct show_dht11 = wireless->dht11->get();
+//			GUI_DispStringInRectWrap(str_Dht11, &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
+//			Rect.x0 -= 20;
+//			Rect.y0 += 20;
+//			GUI_DispStringInRectWrap(str_Dht11_temp, &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
 
-			GUI_GotoXY((Rect.x0+45), Rect.y0);
-			GUI_DispDec(show_dht11.temperature, 2);
-			//block5_x1 = Rect.x0;//
-			//block5_y1 = Rect.y0;
-			Rect.y0 += 20;
-			GUI_DispStringInRectWrap(str_Dht11_humi, &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
-			GUI_GotoXY((Rect.x0 + 45), Rect.y0);
-			GUI_DispDec(show_dht11.humidity, 2);
-			//block5_x2 = Rect.x0;//
-			//block5_y2 = Rect.y0;
-			Rect.x0 += 20;
-			Rect.y0 -= 40;
+//			GUI_GotoXY((Rect.x0+45), Rect.y0);
+//			GUI_DispDec(show_dht11.temperature, 2);
+//			//block5_x1 = Rect.x0;//
+//			//block5_y1 = Rect.y0;
+//			Rect.y0 += 20;
+//			GUI_DispStringInRectWrap(str_Dht11_humi, &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
+//			GUI_GotoXY((Rect.x0 + 45), Rect.y0);
+//			GUI_DispDec(show_dht11.humidity, 2);
+//			//block5_x2 = Rect.x0;//
+//			//block5_y2 = Rect.y0;
+//			Rect.x0 += 20;
+//			Rect.y0 -= 40;
 
-		}
-		else{
-			GUI_DispStringInRectWrap(str_Landzo, &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
-		}
-		Rect.x0 -= 20;
+//		}
+//		else{
+//			GUI_DispStringInRectWrap(str_Landzo, &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
+//		}
+//		Rect.x0 -= 20;
 
-		Rect.x0 += (10 + 93);
-		Rect.x1 += (10 + 93);
+//		Rect.x0 += (10 + 93);
+//		Rect.x1 += (10 + 93);
+//	}
+	if(tim_flg == 1){
+		GUI_AA_SetFactor(10);
+		GUI_AA_FillRoundedRect(10, 30, 310, 210, 15);
+		GUI_SetTextMode(GUI_TM_TRANS);
+		GUI_SetColor(GUI_BLACK);
+		
+		GUI_SetBkColor(GUI_WHITE);
+		GUI_Clear();
+		GUI_SetBkColor(GUI_BLUE);
+		GUI_SetFont(GUI_FONT_20_ASCII);
+		GUI_DispStringAt(str_Dht11, 3, 3);
+		GUI_SetBkColor(GUI_BLUE);
+		GUI_ClearRect(25,60,145,180);
+
+		GUI_ClearRect(175, 60, 295, 180);
+		GUI_DispStringAt(str_Dht11_temp, 190, 90);
+		GUI_DispStringAt(str_Dht11_humi, 190, 120);
+		tim_flg = 0;
 	}
+	DHT11_struct show_dht11 = wireless->dht11->get();
+	GUI_GotoXY(240, 90);
+	GUI_DispDec(show_dht11.temperature, 2);
+	GUI_GotoXY(240, 120);
+	GUI_DispDec(show_dht11.humidity, 2);
+	
 }
 void Show_PIR(void)
 {
-	GUI_RECT Rect = { 10, (75 + 10 + 66 + 10), 102, (75 + 10 + 66 + 10 + 66) };
-	GUI_SetColor(GUI_LIGHTRED);
-	GUI_FillRectEx(&Rect);
-	GUI_SetColor(GUI_GREEN);
-	GUI_DispStringInRectWrap(str_PIR, &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
-	Rect.x0 += 20;
-	Rect.y0 += 20;
-	//GUI_DispStringInRectWrap("somebody!!!", &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
-	GUI_GotoXY(Rect.x0, Rect.y0);
-  PIR_struct show_pir = wireless->pir->get();
+//	GUI_RECT Rect = { 10, (75 + 10 + 66 + 10), 102, (75 + 10 + 66 + 10 + 66) };
+//	GUI_SetColor(GUI_LIGHTRED);
+//	GUI_FillRectEx(&Rect);
+//	GUI_SetColor(GUI_GREEN);
+//	GUI_DispStringInRectWrap(str_PIR, &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
+//	Rect.x0 += 20;
+//	Rect.y0 += 20;
+//	//GUI_DispStringInRectWrap("somebody!!!", &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
+//	GUI_GotoXY(Rect.x0, Rect.y0);
+//  PIR_struct show_pir = wireless->pir->get();
+//	GUI_DispDec(show_pir.digital, 1);
+//	Rect.x0 -= 20;
+//	Rect.y0 -= 20;
+	if(tim_flg==1){
+	GUI_AA_SetFactor(10);
+	GUI_AA_FillRoundedRect(10, 30, 310, 210, 15);
+	GUI_SetTextMode(GUI_TM_TRANS);
+	GUI_SetColor(GUI_BLACK);
+		
+	GUI_SetBkColor(GUI_WHITE);
+	GUI_Clear();
+	GUI_SetBkColor(GUI_BLUE);
+	GUI_SetFont(GUI_FONT_20_ASCII);
+	GUI_DispStringAt(str_PIR, 3, 3);
+	GUI_SetBkColor(GUI_BLUE);
+	GUI_ClearRect(25,60,145,180);
+
+	GUI_ClearRect(175, 60, 295, 180);
+	GUI_DispStringAt("pir:", 210, 110);
+		
+		tim_flg = 0;
+	}
+	
+	//GUI_DispStringAt("1", 240, 110);
+	PIR_struct show_pir = wireless->pir->get();
+	GUI_GotoXY(240, 110);
 	GUI_DispDec(show_pir.digital, 1);
-	Rect.x0 -= 20;
-	Rect.y0 -= 20;
 }
 
 void Show_Potentiometer(void)
 {
-	GUI_RECT Rect = { (10 + 103), (75 + 10 + 66 + 10), (102+103), (75 + 10 + 66 + 10 + 66) };
-	GUI_SetColor(GUI_LIGHTRED);
-	GUI_FillRectEx(&Rect);
-	GUI_SetColor(GUI_GREEN);
-	GUI_DispStringInRectWrap(str_Potentiometer, &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
-	Rect.x0 += 20;
-	Rect.y0 += 20;
-	//GUI_DispStringInRectWrap("somebody!!!", &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
-	GUI_GotoXY(Rect.x0, Rect.y0);
+//	GUI_RECT Rect = { (10 + 103), (75 + 10 + 66 + 10), (102+103), (75 + 10 + 66 + 10 + 66) };
+//	GUI_SetColor(GUI_LIGHTRED);
+//	GUI_FillRectEx(&Rect);
+//	GUI_SetColor(GUI_GREEN);
+//	GUI_DispStringInRectWrap(str_Potentiometer, &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
+//	Rect.x0 += 20;
+//	Rect.y0 += 20;
+//	//GUI_DispStringInRectWrap("somebody!!!", &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
+//	GUI_GotoXY(Rect.x0, Rect.y0);
+//	Potentiometer_struct show_poten = wireless->potentiometer->get();
+//	GUI_DispDec(show_poten.analog, 5);
+//	Rect.x0 -= 20;
+//	Rect.y0 -= 20;
+		if(tim_flg==1){
+			GUI_AA_SetFactor(10);
+			GUI_AA_FillRoundedRect(10, 30, 310, 210, 15);
+			GUI_SetTextMode(GUI_TM_TRANS);
+			GUI_SetColor(GUI_BLACK);
+			
+			GUI_SetBkColor(GUI_WHITE);
+			GUI_Clear();
+			GUI_SetBkColor(GUI_BLUE);
+			GUI_SetFont(GUI_FONT_20_ASCII);
+			GUI_DispStringAt(str_Potentiometer, 3, 3);
+			GUI_SetBkColor(GUI_BLUE);
+			GUI_ClearRect(25,60,145,180);
+
+			GUI_ClearRect(175, 60, 295, 180);
+			GUI_DispStringAt("Potentiometer:", 180, 90);
+				
+				tim_flg = 0;
+		}
+	
+	//GUI_DispStringAt("1", 240, 110);
 	Potentiometer_struct show_poten = wireless->potentiometer->get();
-	GUI_DispDec(show_poten.analog, 5);
-	Rect.x0 -= 20;
-	Rect.y0 -= 20;
+	GUI_GotoXY(220, 130);
+	GUI_DispDec(show_poten.analog, 4);
 }
 
 void Show_Large_Key(void)
 {
-	GUI_RECT Rect = { (10 + 103+103), (75 + 10 + 66 + 10), (102 + 103+103), (75 + 10 + 66 + 10 + 66) };
-	GUI_SetColor(GUI_LIGHTRED);
-	GUI_FillRectEx(&Rect);
-	GUI_SetColor(GUI_GREEN);
-	GUI_DispStringInRectWrap(str_bigkey, &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
-	Rect.x0 += 20;
-	Rect.y0 += 20;
-	//GUI_DispStringInRectWrap("somebody!!!", &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
-	GUI_GotoXY(Rect.x0, Rect.y0);
-  BigKey_struct show_bigkey = wireless->bigkey->get();
+//	GUI_RECT Rect = { (10 + 103+103), (75 + 10 + 66 + 10), (102 + 103+103), (75 + 10 + 66 + 10 + 66) };
+//	GUI_SetColor(GUI_LIGHTRED);
+//	GUI_FillRectEx(&Rect);
+//	GUI_SetColor(GUI_GREEN);
+//	GUI_DispStringInRectWrap(str_bigkey, &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
+//	Rect.x0 += 20;
+//	Rect.y0 += 20;
+//	//GUI_DispStringInRectWrap("somebody!!!", &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
+//	GUI_GotoXY(Rect.x0, Rect.y0);
+//  BigKey_struct show_bigkey = wireless->bigkey->get();
+//	GUI_DispDec(show_bigkey.digital, 1);
+//	Rect.x0 -= 20;
+//	Rect.y0 -= 20;
+			if(tim_flg==1){
+				
+			GUI_AA_SetFactor(10);
+			GUI_AA_FillRoundedRect(10, 30, 310, 210, 15);
+			GUI_SetTextMode(GUI_TM_TRANS);
+			GUI_SetColor(GUI_BLACK);
+				
+			GUI_SetBkColor(GUI_WHITE);
+			GUI_Clear();
+			GUI_SetBkColor(GUI_BLUE);
+			GUI_SetFont(GUI_FONT_20_ASCII);
+			GUI_DispStringAt(str_bigkey, 3, 3);
+			GUI_SetBkColor(GUI_BLUE);
+			GUI_ClearRect(25,60,145,180);
+
+			GUI_ClearRect(175, 60, 295, 180);
+			GUI_DispStringAt("large_key:", 190, 90);
+				
+				tim_flg = 0;
+		}
+	
+	//GUI_DispStringAt("1", 240, 110);
+	BigKey_struct show_bigkey = wireless->bigkey->get();
+	GUI_GotoXY(230, 130);
 	GUI_DispDec(show_bigkey.digital, 1);
-	Rect.x0 -= 20;
-	Rect.y0 -= 20;
+	
 }
 
 

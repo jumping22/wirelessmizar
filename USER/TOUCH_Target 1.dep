@@ -1,5 +1,5 @@
 Dependencies for Project 'TOUCH', Target 'Target 1': (DO NOT MODIFY !)
-F (.\main.c)(0x5C2491AD)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O0 -Otime --apcs=interwork --split_sections -I ..\HARDWARE\LED -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\USER -I ..\STM32F10x_FWLib\inc -I ..\CORE -I ..\HARDWARE\KEY -I ..\HARDWARE\EXTI -I ..\HARDWARE\WDG -I ..\HARDWARE\TIMER -I ..\HARDWARE\PWM -I ..\HARDWARE\LCD -I ..\HARDWARE\WKUP -I ..\HARDWARE\ADC -I ..\HARDWARE\TSensor -I ..\HARDWARE\IIC -I ..\HARDWARE\24CXX -I ..\HARDWARE\SPI -I ..\HARDWARE\FLASH -I ..\HARDWARE\TOUCH -I ..\HARDWARE\IIC_SLAVE -I ..\STemWinLibrary522\Config -I ..\STemWinLibrary522\inc -I ..\STemWinLibrary522\Lib -I ..\STemWinLibrary522\OS -I ..\ZIGBEE -I ..\Microbit -I ..\MultiButton-v1.0.2-I E:\wirelessmizar-stm32\USER\RTE-I C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\Include-I C:\Keil_v5\ARM\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0-D__UVISION_VERSION="520" -DSTM32F10X_HD -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER -DUSING_LCD -DUSING_ILI9341_SPI-o .\main.o --omf_browse .\main.crf --depend .\main.d)
+F (.\main.c)(0x5C25C98D)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O0 -Otime --apcs=interwork --split_sections -I ..\HARDWARE\LED -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\USER -I ..\STM32F10x_FWLib\inc -I ..\CORE -I ..\HARDWARE\KEY -I ..\HARDWARE\EXTI -I ..\HARDWARE\WDG -I ..\HARDWARE\TIMER -I ..\HARDWARE\PWM -I ..\HARDWARE\LCD -I ..\HARDWARE\WKUP -I ..\HARDWARE\ADC -I ..\HARDWARE\TSensor -I ..\HARDWARE\IIC -I ..\HARDWARE\24CXX -I ..\HARDWARE\SPI -I ..\HARDWARE\FLASH -I ..\HARDWARE\TOUCH -I ..\HARDWARE\IIC_SLAVE -I ..\STemWinLibrary522\Config -I ..\STemWinLibrary522\inc -I ..\STemWinLibrary522\Lib -I ..\STemWinLibrary522\OS -I ..\ZIGBEE -I ..\Microbit -I ..\MultiButton-v1.0.2-I E:\wirelessmizar-stm32\USER\RTE-I C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\Include-I C:\Keil_v5\ARM\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0-D__UVISION_VERSION="520" -DSTM32F10X_HD -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER -DUSING_LCD -DUSING_ILI9341_SPI-o .\main.o --omf_browse .\main.crf --depend .\main.d)
 I (..\HARDWARE\LED\led.h)(0x5100ED0C)
 I (..\USER\stm32f10x.h)(0x4D783C94)
 I (..\CORE\core_cm3.h)(0x4D523B34)
@@ -46,7 +46,7 @@ I (..\STemWinLibrary522\inc\LCD.h)(0x52E7F27F)
 I (..\STemWinLibrary522\inc\Global.h)(0x52E7F27E)
 I (..\STemWinLibrary522\inc\GUI_Version.h)(0x52E7F27F)
 I (..\HARDWARE\IIC_SLAVE\i2c_STX.h)(0x5BD6C969)
-I (..\Microbit\microbit_iic.h)(0x5C244348)
+I (..\Microbit\microbit_iic.h)(0x5C25C9B4)
 I (..\ZIGBEE\EndDevice.h)(0x5BFB7EBD)
 I (..\ZIGBEE\ZProtoAnalyze.h)(0x5B18EC9B)
 I (..\ZIGBEE\zproto.h)(0x5AEBB67E)
@@ -1351,8 +1351,8 @@ I (..\ZIGBEE\HashTable.h)(0x5BD6BDC6)
 I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x56FE42DE)
 I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x56FE42DE)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x56FE42DE)
-F (..\Microbit\microbit_iic.c)(0x5C2491AD)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O0 -Otime --apcs=interwork --split_sections -I ..\HARDWARE\LED -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\USER -I ..\STM32F10x_FWLib\inc -I ..\CORE -I ..\HARDWARE\KEY -I ..\HARDWARE\EXTI -I ..\HARDWARE\WDG -I ..\HARDWARE\TIMER -I ..\HARDWARE\PWM -I ..\HARDWARE\LCD -I ..\HARDWARE\WKUP -I ..\HARDWARE\ADC -I ..\HARDWARE\TSensor -I ..\HARDWARE\IIC -I ..\HARDWARE\24CXX -I ..\HARDWARE\SPI -I ..\HARDWARE\FLASH -I ..\HARDWARE\TOUCH -I ..\HARDWARE\IIC_SLAVE -I ..\STemWinLibrary522\Config -I ..\STemWinLibrary522\inc -I ..\STemWinLibrary522\Lib -I ..\STemWinLibrary522\OS -I ..\ZIGBEE -I ..\Microbit -I ..\MultiButton-v1.0.2-I E:\wirelessmizar-stm32\USER\RTE-I C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\Include-I C:\Keil_v5\ARM\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0-D__UVISION_VERSION="520" -DSTM32F10X_HD -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER -DUSING_LCD -DUSING_ILI9341_SPI-o .\microbit_iic.o --omf_browse .\microbit_iic.crf --depend .\microbit_iic.d)
-I (..\Microbit\microbit_iic.h)(0x5C244348)
+F (..\Microbit\microbit_iic.c)(0x5C25C9B4)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O0 -Otime --apcs=interwork --split_sections -I ..\HARDWARE\LED -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\USER -I ..\STM32F10x_FWLib\inc -I ..\CORE -I ..\HARDWARE\KEY -I ..\HARDWARE\EXTI -I ..\HARDWARE\WDG -I ..\HARDWARE\TIMER -I ..\HARDWARE\PWM -I ..\HARDWARE\LCD -I ..\HARDWARE\WKUP -I ..\HARDWARE\ADC -I ..\HARDWARE\TSensor -I ..\HARDWARE\IIC -I ..\HARDWARE\24CXX -I ..\HARDWARE\SPI -I ..\HARDWARE\FLASH -I ..\HARDWARE\TOUCH -I ..\HARDWARE\IIC_SLAVE -I ..\STemWinLibrary522\Config -I ..\STemWinLibrary522\inc -I ..\STemWinLibrary522\Lib -I ..\STemWinLibrary522\OS -I ..\ZIGBEE -I ..\Microbit -I ..\MultiButton-v1.0.2-I E:\wirelessmizar-stm32\USER\RTE-I C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\Include-I C:\Keil_v5\ARM\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0-D__UVISION_VERSION="520" -DSTM32F10X_HD -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER -DUSING_LCD -DUSING_ILI9341_SPI-o .\microbit_iic.o --omf_browse .\microbit_iic.crf --depend .\microbit_iic.d)
+I (..\Microbit\microbit_iic.h)(0x5C25C9B4)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x56FE42DE)
 I (..\SYSTEM\delay\delay.h)(0x5100ED48)
 I (..\USER\stm32f10x.h)(0x4D783C94)

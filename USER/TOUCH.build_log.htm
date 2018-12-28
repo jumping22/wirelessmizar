@@ -22,12 +22,23 @@ Dialog DLL:      TCM.DLL V1.14.9.0
  
 <h2>Project:</h2>
 E:\wirelessmizar-stm32\USER\TOUCH.uvprojx
-Project File Date:  12/26/2018
+Project File Date:  12/27/2018
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 2 (build 183)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'Target 1'
 compiling microbit_iic.c...
+..\Microbit\microbit_iic.h(11): error:  #20: identifier "GUI_CONST_STORAGE" is undefined
+  extern GUI_CONST_STORAGE GUI_FONT GUI_FontFontSong;
+..\Microbit\microbit_iic.h(11): error:  #65: expected a ";"
+  extern GUI_CONST_STORAGE GUI_FONT GUI_FontFontSong;
+..\STemWinLibrary522\inc\GUI_Type.h(287): error:  #101: "GUI_FONT" has already been declared in the current scope
+  typedef struct GUI_FONT GUI_FONT;
+..\Microbit\microbit_iic.c(521): error:  #20: identifier "GUI_FontFontSong" is undefined
+  			GUI_SetFont(&GUI_FontFontSong);
+..\Microbit\microbit_iic.c(526): error:  #20: identifier "OutPoints" is undefined
+  			GUI_DrawPolygon(OutPoints, 8, 270, 5);
+..\Microbit\microbit_iic.c: 0 warnings, 5 errors
 compiling main.c...
 ..\HARDWARE\ADC\adc.h(13): warning:  #1295-D: Deprecated declaration Get_Adc - give arg types
   u16  Get_Adc();
@@ -36,16 +47,14 @@ compiling main.c...
 main.c(140): warning:  #167-D: argument of type "void (*)(uint8_t)" is incompatible with parameter of type "i2c_recv_callback"
   	I2C1_SetRecvCallback(microbit_recv_analyze);
 main.c: 3 warnings, 0 errors
-linking...
-Program Size: Code=55608 RO-data=28028 RW-data=856 ZI-data=12880  
-FromELF: creating hex file...
-".\TOUCH.axf" - 0 Error(s), 3 Warning(s).
+".\TOUCH.axf" - 5 Error(s), 3 Warning(s).
 
 <h2>Collection of Component include folders:</h2>
   E:\wirelessmizar-stm32\USER\RTE
   C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\Include
 
 <h2>Collection of Component Files used:</h2>
+Target not created.
 Build Time Elapsed:  00:00:02
 </pre>
 </body>

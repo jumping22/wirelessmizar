@@ -105,10 +105,10 @@ uint32_t timer1 = 0;
 GUI_RECT Rect = { 0, 0, 200, 200 };
 uint8_t nextpag_flg = 0;
 u16 bat_Voltage=0;
-unsigned char tim_flg=0;
+unsigned char tim_flg = 1;
 uint8_t user_gui_interface = 0;	//用户界面编程标志
-
-
+uint8_t user_gui_stop = 0;//非用户界面暂停恢复标志
+uint8_t page_number = 0;
 extern void MainTask(void);
 extern GUI_CONST_STORAGE GUI_FONT GUI_FontFontSong;
 extern const char str_Landzo[] = {"\xe8\x93\x9d\xe5\xae\x99\xe7\x94\xb5\xe5\xad\x90"};
@@ -165,6 +165,28 @@ int main(void)
 	//GUI_DispStringAt(&lanzhoudianzi1[0], 0, 0);
 	//tim_flg=1;
 	//Sensors_page();
+//	GUI_SetColor(GUI_WHITE);
+//	GUI_SetPenSize(2);
+
+//	GUI_SetFont(&GUI_FontFontSong);
+//	GUI_DispStringAt(str_Landzo,3, 3);
+//	//GUI_SetFont(&GUI_FontFontSong);
+//	GUI_DispStringAt(str_next,5,219);
+//	GUI_DispStringAt(str_back, 90, 219);
+//	GUI_DispStringAt(str_stop, 185, 219); 
+//	GUI_DispStringAt(str_begin, 250, 219);
+//	GUI_SetFont(GUI_FONT_20_ASCII);
+//	GUI_DrawPolygon(OutPoints, 8, 270, 5);
+//	GUI_SetPenSize(1);
+//	GUI_SetLineStyle(GUI_LS_DASH);
+//	GUI_DrawLine(0, 25, 320, 25);
+//	GUI_DrawLine(0, 214, 320, 214);
+//	GUI_SetColor(GUI_LIGHTGRAY);
+//	//GUI_DrawGradientRoundedH(10, 30, 310, 210, 15, 0x00838383,0x00D3D3D3);
+//	GUI_AA_SetFactor(15);
+//	GUI_AA_FillRoundedRect(10, 30, 310, 210, 15);
+//	GUI_SetColor(GUI_BLACK);
+//	GUI_SetTextMode(GUI_TM_TRANS);
 	
 	while(1) {
 #if defined(USING_LCD)
@@ -173,33 +195,92 @@ int main(void)
 		timer1++;
 		multi_button_event();
 		if (user_gui_interface == 0) {
-			if(timer1 % 200 == 0)//2S刷一次
+			if(user_gui_stop == 0)
 			{
-				Voltage_Pros();
-			}
-			if(nextpag_flg ==1)
-			{
-					//nextpag_flg=2;
-				if (timer1 % 100 == 0) { //1s
-					//if(ShowSensorData_flg==1){
-							Sensors_page();
-	//					GUI_SetTextMode(GUI_TM_TRANS);
-	//					GUI_SetFont(GUI_FONT_8X18);
-	//					Show_IR_Distance();
-	//					Show_IR_Remote();
-	//					Show_PRS();
-	//					Show_DHT11();
-	//					Show_PIR();
-	//					Show_Potentiometer();
-	//					Show_Large_Key();
-							
+						if(timer1 % 200 == 0)//2S刷一次
+						{
+							if(page_number == 0 ){
+								Voltage_Pros();
+							}
+						}
+//						if(nextpag_flg ==1)
+//						{
+								//nextpag_flg=2;
+							if (timer1 % 100 == 0) { //1s
+								//if(ShowSensorData_flg==1){
+											
+
+										switch (page_number){
+											
+											case 0:{
+												Sensors_page();
+											}break;
+											
+											case 1:{
+//												GUI_SetTextMode(GUI_TM_TRANS);
+//												GUI_SetFont(GUI_FONT_8X18);
+												Show_IR_Distance();
+											}break;
+											
+											case 2:{
+//												GUI_SetTextMode(GUI_TM_TRANS);
+//												GUI_SetFont(GUI_FONT_8X18);
+												Show_IR_Remote();
+											}break;
+											
+											case 3:{
+//												GUI_SetTextMode(GUI_TM_TRANS);
+//												GUI_SetFont(GUI_FONT_8X18);
+												Show_PRS();
+											}break;
+											
+											case 4:{
+//												GUI_SetTextMode(GUI_TM_TRANS);
+//												GUI_SetFont(GUI_FONT_8X18);
+												Show_DHT11();
+											}break;
+											
+											case 5:{
+//												GUI_SetTextMode(GUI_TM_TRANS);
+//												GUI_SetFont(GUI_FONT_8X18);
+												Show_PIR();
+											}break;
+											
+											case 6:{
+//												GUI_SetTextMode(GUI_TM_TRANS);
+//												GUI_SetFont(GUI_FONT_8X18);
+												Show_Potentiometer();
+											}break;
+											
+											case 7:{
+//												GUI_SetTextMode(GUI_TM_TRANS);
+//												GUI_SetFont(GUI_FONT_8X18);
+												Show_Large_Key();
+											}break;
+											default :break;
+											
+					
+					
 				}
-			}
-			else if(nextpag_flg==0)
-			{
-				nextpag_flg=2;
-				//GUI_Clear();
-				home_page();
+				//						Sensors_page();
+				//					GUI_SetTextMode(GUI_TM_TRANS);
+				//					GUI_SetFont(GUI_FONT_8X18);
+				//					Show_IR_Distance();
+				//					Show_IR_Remote();
+				//					Show_PRS();
+				//					Show_DHT11();
+				//					Show_PIR();
+				//					Show_Potentiometer();
+				//					Show_Large_Key();
+										
+				}
+//						}
+//						else if(nextpag_flg==0)
+//						{
+//							nextpag_flg=2;
+//							//GUI_Clear();
+//							home_page();
+//						}
 			}
 		}
 	}
@@ -255,26 +336,18 @@ void multi_button_event(void)
 				break;
 			case SINGLE_CLICK:
 				if (user_gui_interface == 0) {
-					nextpag_flg = 1;
-					tim_flg=1;
+					page_number ++;
+					if(page_number > 7)
+					{
+						page_number = 1;
+					}
+					tim_flg = 1;
 					GUI_Clear();
 				}
 			break;//GUI_DispStringAt("key1_press!",15,120) 
 			case PRESS_UP: break;
 			default: break;			
-//			case PRESS_REPEAT:break; 
-//			case SINGLE_CLICK:
-//				GUI_DispStringAtCEOL("Single click!",10,30);
-//				break; 
-//			case DOUBLE_CLICK:
-//				GUI_DispStringAtCEOL("Doublee click!",10,30);
-//				break; 
-//			case LONG_RRESS_START:
-//				GUI_DispStringAtCEOL("Long press start!",10,30);
-//				break; 
-//			case LONG_PRESS_HOLD:
-//				GUI_DispStringAtCEOL("Long press hold!",10,30);
-//				break; 
+
 		}
 	}
 	
@@ -283,12 +356,18 @@ void multi_button_event(void)
 		switch((uint8_t)btn2_event)
 		{
 			case NONE_PRESS:break;
-			case SINGLE_CLICK:
-				if (user_gui_interface == 0) {
-					nextpag_flg = 0;
-					GUI_Clear();
-				}
-			break; //GUI_DispStringAt("key2_press!",15,120);
+			case SINGLE_CLICK:{
+					if (user_gui_interface == 0) {
+						page_number --;
+						if(page_number < 1)
+						{
+							page_number = 7;
+						}
+						tim_flg = 1;
+						GUI_Clear();
+					}
+			}break; //GUI_DispStringAt("key2_press!",15,120);
+			
 			case PRESS_UP: break;
 			default: break;			
 		}
@@ -298,7 +377,10 @@ void multi_button_event(void)
 		switch((uint8_t)btn3_event)
 		{
 			case NONE_PRESS:break;
-			case PRESS_DOWN:break; 
+			case SINGLE_CLICK:{
+				user_gui_stop = !user_gui_stop;	
+			}break; 
+			
 			case PRESS_UP: break;
 			default: break;			
 		}
@@ -308,7 +390,13 @@ void multi_button_event(void)
 		switch((uint8_t)btn4_event)
 		{
 			case NONE_PRESS:break;
-			case PRESS_DOWN:break; 
+			case SINGLE_CLICK:
+			{
+				page_number = 0;
+				tim_flg=1;
+				GUI_Clear();
+			}break; 
+			
 			case PRESS_UP: break;
 			default: break;			
 		}
@@ -424,6 +512,9 @@ void Sensors_page(void)
 {
 	if(tim_flg==1)
 	{
+		GUI_SetBkColor(GUI_BLACK);
+		GUI_Clear();
+		
 		GUI_SetColor(GUI_WHITE);
 		GUI_SetPenSize(2);
 		//GUI_SetFont(GUI_FONT_20_ASCII);
@@ -457,7 +548,6 @@ void Sensors_page(void)
 	GUI_SetFont(&GUI_FontFontSong);
 	GUI_DispStringAt(str_IR_Distance, 25, 34);
 	GUI_SetFont(GUI_FONT_20_ASCII);
-	
 	IRdistance_struct ird = wireless->irdistance->get();
 	GUI_GotoXY(25 + 120, 34);
 	GUI_DispDec(ird.distance, 4);
