@@ -552,13 +552,12 @@ ARM Macro Assembler    Page 9
               00000000 
               00000000 
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M3 --apcs=interw
-ork --depend=.\startup_stm32f10x_hd.d -o.\startup_stm32f10x_hd.o -I"E:\无线米萨
-\无线米萨项目\程序代码\无线米萨主控器ILI9341 SPI程序STM32RE(V0.3)\ILI9341 SPI程
-序STM32 IO\USER\RTE" -IC:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\Incl
-ude -IC:\Keil_v5\ARM\CMSIS\Include -IC:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.2
-.0 --predefine="__MICROLIB SETA 1" --predefine="__UVISION_VERSION SETA 520" --p
-redefine="STM32F10X_HD SETA 1" --list=.\startup_stm32f10x_hd.lst ..\CORE\startu
-p_stm32f10x_hd.s
+ork --depend=.\startup_stm32f10x_hd.d -o.\startup_stm32f10x_hd.o -IE:\wirelessm
+izar-stm32\USER\RTE -IC:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\Inclu
+de -IC:\Keil_v5\ARM\CMSIS\Include -IC:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.2.
+0 --predefine="__MICROLIB SETA 1" --predefine="__UVISION_VERSION SETA 520" --pr
+edefine="STM32F10X_HD SETA 1" --list=.\startup_stm32f10x_hd.lst ..\CORE\startup
+_stm32f10x_hd.s
 
 
 

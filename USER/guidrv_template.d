@@ -12,6 +12,7 @@
 .\guidrv_template.o: ..\STemWinLibrary522\inc\GUI_Version.h
 .\guidrv_template.o: ..\STemWinLibrary522\inc\GUI_Private.h
 .\guidrv_template.o: ..\STemWinLibrary522\inc\GUI_Debug.h
+.\guidrv_template.o: ..\STemWinLibrary522\inc\WM_GUI.h
 .\guidrv_template.o: ..\STemWinLibrary522\inc\LCD_ConfDefaults.h
 .\guidrv_template.o: ..\HARDWARE\LCD\ili9341.h
 .\guidrv_template.o: ..\SYSTEM\sys\sys.h

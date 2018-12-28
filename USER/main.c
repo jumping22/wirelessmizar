@@ -20,14 +20,14 @@
 #include "multi_button.h"
 #include "pwm.h"
 #include "adc.h"
-
+#include "Font.h"
 /****************************************Copyright (c)****************************************************
 **--------------------------------------------------------------------------------------------------------
 ** Created by		WUDONG SHANG
 ** Modified by:    ENJIE DU	&	JUMPING WANG
-** Modified date:        2018-12-25 CHRISTMAS DAY	- ¡¤¡¤¡¤  
+** Modified date:        2018-12-25 CHRISTMAS DAY	- Â·Â·Â·  
 ** Version:               V0.3
-** Descriptions:          2D»æÍ¼Ìí¼Ó  
+** Descriptions:          2Dç»˜å›¾æ·»åŠ   
 ** All copyright by LANDZO Electronic 
 *********************************************************************************************************/
 void TIM3_Int_Init(u16 arr,u16 psc);
@@ -101,22 +101,40 @@ void Show_Large_Key(void);
 
 
 WirelessDevice_class *wireless;
-static uint32_t timer1 = 0;
+uint32_t timer1 = 0;
 GUI_RECT Rect = { 0, 0, 200, 200 };
-unsigned char nextpag_flg = 0;
+uint8_t nextpag_flg = 0;
 u16 bat_Voltage=0;
 unsigned char tim_flg=0;
-uint8_t user_gui_interface = 0;	//ÓÃ»§½çÃæ±à³Ì±êÖ¾
+uint8_t user_gui_interface = 0;	//ç”¨æˆ·ç•Œé¢ç¼–ç¨‹æ ‡å¿—
+
+
+extern void MainTask(void);
+extern GUI_CONST_STORAGE GUI_FONT GUI_FontFontSong;
+extern const char str_Landzo[] = {"\xe8\x93\x9d\xe5\xae\x99\xe7\x94\xb5\xe5\xad\x90"};
+extern const char str_IR_Distance[] = {"\xe7\xba\xa2\xe5\xa4\x96\xe6\xb5\x8b\xe8\xb7\x9d"};
+extern const char str_PRS[] = {"\xe5\x85\x89\xe6\x95\x8f\xe7\x94\xb5\xe9\x98\xbb"};
+extern const char str_Dht11[] = {"\xe6\xb8\xa9\xe6\xb9\xbf\xe5\xba\xa6"};
+extern const char str_Dht11_temp[] = {"\xe6\xb8\xa9\xe5\xba\xa6"};
+extern const char str_Dht11_humi[] = {"\xe6\xb9\xbf\xe5\xba\xa6"};
+extern const char str_PIR[] = {"\xe4\xba\xba\xe4\xbd\x93\xe7\xba\xa2\xe5\xa4\x96"};
+extern const char str_bigkey[] = {"\xe5\xa4\xa7\xe6\x8c\x89\xe9\x94\xae"};
+extern const char str_Potentiometer[] = {"\xe6\x97\x8b\xe8\xbd\xac\xe7\x94\xb5\xe4\xbd\x8d\xe5\x99\xa8"};
+extern const char str_IR_Remote[] = {"\xe7\xba\xa2\xe5\xa4\x96\xe6\x8e\xa5\xe5\x8f\x97"};
+extern const char str_stop[] = {"\xe6\x9a\x82\xe5\x81\x9c"};
+extern const char str_back[] = {"\xe4\xb8\x8a\xe4\xb8\x80\xe9\xa1\xb5"};
+extern const char str_next[] = {"\xe4\xb8\x8b\xe4\xb8\x80\xe9\xa1\xb5"};
+extern const char str_begin[] = {"\xe6\x81\xa2\xe5\xa4\x8d"};
 
 int main(void)
 {
-	delay_init(72);	     //ÑÓÊ±³õÊ¼»¯
+	delay_init(72);	     //å»¶æ—¶åˆå§‹åŒ–
 	NVIC_Configuration();
-	INTX_DISABLE();//¹Ø×ÜÖĞ¶Ï
+	INTX_DISABLE();//å…³æ€»ä¸­æ–­
 	PWR_5182CTL_Init();
 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_CRC, ENABLE);
 	Adc_Init();
-	//TIM3_PWM_Init();//ÆÁÄ»±³¹â
+	//TIM3_PWM_Init();//å±å¹•èƒŒå…‰
 	wireless = WirelessDevice_Init(uart_send);
 	uart1_SetRecvCallback(wireless->analyze);
 	I2C1_SetRecvCallback(microbit_recv_analyze);
@@ -125,7 +143,7 @@ int main(void)
 	I2C1_Slave_init();
 	
 #if defined(USING_LCD)
-	TIM3_Int_Init(999,71);	//1KHZ ¶¨Ê±Æ÷1ms
+	TIM3_Int_Init(999,71);	//1KHZ å®šæ—¶å™¨1ms
 	#if defined(USING_ILI9341_8BIT)
 		TFTLCD_Init();
 	#elif defined(USING_ILI9341_SPI)
@@ -134,9 +152,19 @@ int main(void)
 	GUI_Init();  
 #endif
 	wireless->Router->router_init();
-	INTX_ENABLE();//¿ª×ÜÖĞ¶Ï
-	GPIO_SetBits(GPIOB,GPIO_Pin_10);//´ò¿ª5182µçÔ´		
+	INTX_ENABLE();//å¼€æ€»ä¸­æ–­
+	GPIO_SetBits(GPIOB,GPIO_Pin_10);//æ‰“å¼€5182ç”µæº		
 	
+	//WM_MULTIBUF_Enable(1);
+	
+	GUI_UC_SetEncodeUTF8();
+//	GUI_SetFont(GUI_FONT_20_ASCII);
+//	GUI_SetFont(&GUI_FontFontSong);
+	//MainTask();
+	
+	//GUI_DispStringAt(&lanzhoudianzi1[0], 0, 0);
+	//tim_flg=1;
+	//Sensors_page();
 	
 	while(1) {
 #if defined(USING_LCD)
@@ -145,7 +173,7 @@ int main(void)
 		timer1++;
 		multi_button_event();
 		if (user_gui_interface == 0) {
-			if(timer1 % 200 == 0)//2SË¢Ò»´Î
+			if(timer1 % 200 == 0)//2Såˆ·ä¸€æ¬¡
 			{
 				Voltage_Pros();
 			}
@@ -216,7 +244,7 @@ void multi_button_init(void)
 void multi_button_event(void)
 {
 	uint32_t btn_event_val;
-	GUI_SetColor(GUI_BLUE);	 
+	//GUI_SetColor(GUI_BLUE);	 
 	if(btn_event_val != get_button_event(&btn1)) {
 		//btn_event_val = get_button_event(&btn1);
 		btn1_event = get_button_event(&btn1);
@@ -226,9 +254,11 @@ void multi_button_event(void)
 				//GUI_DispStringAtCEOL("None press!",10,30);
 				break;
 			case SINGLE_CLICK:
-				nextpag_flg = 1;
-				tim_flg=1;
-				GUI_Clear();
+				if (user_gui_interface == 0) {
+					nextpag_flg = 1;
+					tim_flg=1;
+					GUI_Clear();
+				}
 			break;//GUI_DispStringAt("key1_press!",15,120) 
 			case PRESS_UP: break;
 			default: break;			
@@ -254,8 +284,10 @@ void multi_button_event(void)
 		{
 			case NONE_PRESS:break;
 			case SINGLE_CLICK:
-				nextpag_flg = 0;
-				GUI_Clear();
+				if (user_gui_interface == 0) {
+					nextpag_flg = 0;
+					GUI_Clear();
+				}
 			break; //GUI_DispStringAt("key2_press!",15,120);
 			case PRESS_UP: break;
 			default: break;			
@@ -266,7 +298,7 @@ void multi_button_event(void)
 		switch((uint8_t)btn3_event)
 		{
 			case NONE_PRESS:break;
-			case PRESS_DOWN:GUI_DispStringAt("key3_press!", 220, 120);break; 
+			case PRESS_DOWN:break; 
 			case PRESS_UP: break;
 			default: break;			
 		}
@@ -276,7 +308,7 @@ void multi_button_event(void)
 		switch((uint8_t)btn4_event)
 		{
 			case NONE_PRESS:break;
-			case PRESS_DOWN:GUI_DispStringAt("key4_press!", 220, 120);break; 
+			case PRESS_DOWN:break; 
 			case PRESS_UP: break;
 			default: break;			
 		}
@@ -319,14 +351,14 @@ void TIM3_Int_Init(u16 arr,u16 psc)
 {
 	TIM_TimeBaseInitTypeDef	TIM_TimeBaseInitStructure;
 	NVIC_InitTypeDef NVIC_InitStructure;
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3,ENABLE);//¿ªÆôTIM3Ê±ÖÓ 
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3,ENABLE);//å¼€å¯TIM3æ—¶é’Ÿ 
 
-	TIM_TimeBaseInitStructure.TIM_Prescaler=psc;   //·ÖÆµÖµ
-	TIM_TimeBaseInitStructure.TIM_CounterMode=TIM_CounterMode_Up;	   //¼ÆÊıÄ£Ê½
-	TIM_TimeBaseInitStructure.TIM_Period=arr;		   //×Ô¶¯ÖØ×°ÊıÖµ
-	TIM_TimeBaseInitStructure.TIM_ClockDivision=TIM_CKD_DIV1;  //ÉèÖÃÊ±ÖÓ·Ö¸î
+	TIM_TimeBaseInitStructure.TIM_Prescaler=psc;   //åˆ†é¢‘å€¼
+	TIM_TimeBaseInitStructure.TIM_CounterMode=TIM_CounterMode_Up;	   //è®¡æ•°æ¨¡å¼
+	TIM_TimeBaseInitStructure.TIM_Period=arr;		   //è‡ªåŠ¨é‡è£…æ•°å€¼
+	TIM_TimeBaseInitStructure.TIM_ClockDivision=TIM_CKD_DIV1;  //è®¾ç½®æ—¶é’Ÿåˆ†å‰²
 	TIM_TimeBaseInit(TIM3,&TIM_TimeBaseInitStructure);
-	TIM_ITConfig(TIM3,TIM_IT_Update,ENABLE);//ÔÊĞí¸üĞÂÖĞ¶Ï
+	TIM_ITConfig(TIM3,TIM_IT_Update,ENABLE);//å…è®¸æ›´æ–°ä¸­æ–­
 
 	NVIC_InitStructure.NVIC_IRQChannel=TIM3_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=0;
@@ -334,7 +366,7 @@ void TIM3_Int_Init(u16 arr,u16 psc)
 	NVIC_InitStructure.NVIC_IRQChannelCmd=ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 
-	TIM_Cmd(TIM3,ENABLE);		 //Ê¹ÄÜTIM3
+	TIM_Cmd(TIM3,ENABLE);		 //ä½¿èƒ½TIM3
 }
 
 void TIM3_IRQHandler(void)
@@ -362,12 +394,14 @@ void home_page(void)
 	GUI_SetColor(GUI_WHITE);
 	GUI_SetPenSize(2);
 
+	GUI_SetFont(&GUI_FontFontSong);
+	GUI_DispStringAt(str_Landzo,3, 3);
+	//GUI_SetFont(&GUI_FontFontSong);
+	GUI_DispStringAt(str_next,5,219);
+	GUI_DispStringAt(str_back, 90, 219);
+	GUI_DispStringAt(str_stop, 185, 219); 
+	GUI_DispStringAt(str_begin, 250, 219);
 	GUI_SetFont(GUI_FONT_20_ASCII);
-	GUI_DispStringAt("HomePage",3, 3);
-	GUI_DispStringAt("NEXT",5,219);
-	GUI_DispStringAt("BACK", 90, 219);
-	GUI_DispStringAt("OK", 185, 219); 
-	GUI_DispStringAt("CANCEL", 250, 219);
 	GUI_DrawPolygon(OutPoints, 8, 270, 5);
 	GUI_SetPenSize(1);
 	GUI_SetLineStyle(GUI_LS_DASH);
@@ -380,10 +414,11 @@ void home_page(void)
 	GUI_SetColor(GUI_BLACK);
 	GUI_SetTextMode(GUI_TM_TRANS);
 	GUI_DispStringAt("Sensors is connected:", 40, 40);
-	GUI_DispStringAt("ID:1001                        ID:1004", 40, 80);//24¸ö¿Õ¸ñ
-	GUI_DispStringAt("ID:1002                        ID:1005", 40, 120);//24¸ö¿Õ¸ñ
-	GUI_DispStringAt("ID:1003                        ID:1006", 40, 160);//24¸ö¿Õ¸ñ
+	GUI_DispStringAt("ID:1001                        ID:1004", 40, 80);//24ä¸ªç©ºæ ¼
+	GUI_DispStringAt("ID:1002                        ID:1005", 40, 120);//24ä¸ªç©ºæ ¼
+	GUI_DispStringAt("ID:1003                        ID:1006", 40, 160);//24ä¸ªç©ºæ ¼
 }
+
 
 void Sensors_page(void)
 {
@@ -391,13 +426,14 @@ void Sensors_page(void)
 	{
 		GUI_SetColor(GUI_WHITE);
 		GUI_SetPenSize(2);
-		GUI_SetFont(GUI_FONT_20_ASCII);
-		GUI_DispStringAt("Sensors",3, 3);
+		//GUI_SetFont(GUI_FONT_20_ASCII);
+		GUI_SetFont(&GUI_FontFontSong);
+		GUI_DispStringAt(str_Landzo,3, 3);
 		//
-		GUI_DispStringAt("NEXT",5,219);
-		GUI_DispStringAt("BACK", 90, 219);
-		GUI_DispStringAt("OK", 185, 219); 
-		GUI_DispStringAt("CANCEL", 250, 219);
+		GUI_DispStringAt(str_next,5,219);
+		GUI_DispStringAt(str_back, 90, 219);
+		GUI_DispStringAt(str_stop, 185, 219); 
+		GUI_DispStringAt(str_begin, 250, 219);
 		GUI_DrawPolygon(OutPoints, 8, 270, 5);
 		GUI_SetPenSize(1);
 		GUI_SetLineStyle(GUI_LS_DASH);
@@ -415,51 +451,77 @@ void Sensors_page(void)
 	
 	GUI_SetColor(GUI_WHITE);
 	
+	
 	GUI_DrawGradientRoundedH(20, 33, 300, 56, 5, 0x00FF7070, 0x00FFB0B0);
-	GUI_DispStringAt("IR_Distance:", 25, 34);
+	//GUI_DispStringAt("IR_Distance:", 25, 34);
+	GUI_SetFont(&GUI_FontFontSong);
+	GUI_DispStringAt(str_IR_Distance, 25, 34);
+	GUI_SetFont(GUI_FONT_20_ASCII);
+	
 	IRdistance_struct ird = wireless->irdistance->get();
 	GUI_GotoXY(25 + 120, 34);
 	GUI_DispDec(ird.distance, 4);
 
 	GUI_DrawGradientRoundedH(20, 58, 300, 81, 5, 0x00FF7070, 0x00FFB0B0);
-	GUI_DispStringAt("IR_Remote:", 25, 59);
+	//GUI_DispStringAt("IR_Remote:", 25, 59);
+	GUI_SetFont(&GUI_FontFontSong);
+	GUI_DispStringAt(str_IR_Remote, 25, 59);
+	GUI_SetFont(GUI_FONT_20_ASCII);
 	IRremote_struct irr = wireless->irremote->get();
 	GUI_GotoXY(25 + 120, 59);
 	GUI_DispHex(irr.key, 8);
 
 	GUI_DrawGradientRoundedH(20, 82 + 1, 300, 105 + 1, 5, 0x00FF7070, 0x00FFB0B0);
-	GUI_DispStringAt("PRS:", 25, 84);
+	//GUI_DispStringAt("PRS:", 25, 84);
+	GUI_SetFont(&GUI_FontFontSong);
+	GUI_DispStringAt(str_PRS, 25, 84);
+	GUI_SetFont(GUI_FONT_20_ASCII);
 	PRS_struct show_prs = wireless->prs->get();
 	GUI_GotoXY(25 + 120, 84);
 	GUI_DispDec(show_prs.analog, 4);
 
 	GUI_DrawGradientRoundedH(20, 107 + 1, 300, 130 + 1, 5, 0x00FF7070, 0x00FFB0B0);
-	GUI_DispStringAt("DHT11:", 25, 109);
-	GUI_DispStringAt("Temp:", 100, 109);
-	GUI_DispStringAt("Humi:", 200, 109);
+//	GUI_DispStringAt("DHT11:", 25, 109);
+//	GUI_DispStringAt("Temp:", 100, 109);
+//	GUI_DispStringAt("Humi:", 200, 109);
+	GUI_SetFont(&GUI_FontFontSong);
+	GUI_DispStringAt(str_Dht11, 25, 109);
+	GUI_DispStringAt(str_Dht11_temp, 100, 109);
+	GUI_DispStringAt(str_Dht11_humi, 200, 109);
+	GUI_SetFont(GUI_FONT_20_ASCII);
 	DHT11_struct show_dht11 = wireless->dht11->get();
-	GUI_GotoXY(155, 109);
+	GUI_GotoXY(145, 109);
 	GUI_DispDec(show_dht11.temperature, 2);
-	GUI_GotoXY(250, 109);
+	GUI_GotoXY(242, 109);
 	GUI_DispDec(show_dht11.humidity, 2);
 
 	GUI_DrawGradientRoundedH(20, 132 + 1, 300, 155 + 1, 5, 0x00FF7070, 0x00FFB0B0);
-	GUI_DispStringAt("PIR:", 25, 134);
+	//GUI_DispStringAt("PIR:", 25, 134);
+	GUI_SetFont(&GUI_FontFontSong);
+	GUI_DispStringAt(str_PIR, 25, 134);
+	GUI_SetFont(GUI_FONT_20_ASCII);
 	PIR_struct show_pir = wireless->pir->get();
 	GUI_GotoXY(25 + 120, 134);
 	GUI_DispDec(show_pir.digital, 1);
 
 	GUI_DrawGradientRoundedH(20, 157 + 1, 300, 180 + 1, 5, 0x00FF7070, 0x00FFB0B0);
-	GUI_DispStringAt("Potentiometer:", 25, 159);
+	//GUI_DispStringAt("Potentiometer:", 25, 159);
+	GUI_SetFont(&GUI_FontFontSong);
+	GUI_DispStringAt(str_Potentiometer, 25, 159);
+	GUI_SetFont(GUI_FONT_20_ASCII);
 	Potentiometer_struct show_poten = wireless->potentiometer->get();
 	GUI_GotoXY(25 + 120, 159);
 	GUI_DispDec(show_poten.analog, 4);
 
 	GUI_DrawGradientRoundedH(20, 182 + 1, 300, 205 + 1, 5, 0x00FF7070, 0x00FFB0B0);
-	GUI_DispStringAt("Large_Key:", 25, 184);
+	//GUI_DispStringAt("Large_Key:", 25, 184);
+	GUI_SetFont(&GUI_FontFontSong);
+	GUI_DispStringAt(str_bigkey, 25, 184);
+	GUI_SetFont(GUI_FONT_20_ASCII);
 	BigKey_struct show_bigkey = wireless->bigkey->get();
 	GUI_GotoXY(25 + 120, 184);
 	GUI_DispDec(show_bigkey.digital, 1);
+	
 }
 
 void Voltage_Pros(void)
@@ -467,55 +529,55 @@ void Voltage_Pros(void)
 	u16 Voltage_dat=100;
 	GUI_SetTextMode(GUI_TM_NORMAL);
 	GUI_SetColor(GUI_GREEN);
-	bat_Voltage=(u16)((Get_Voltage()-340)*1.34);//µç³Ø³äÂúÎª4.15V LDO×îĞ¡ÊäÈëÔÚ3.4V
+	bat_Voltage=(u16)((Get_Voltage()-340)*1.34);//ç”µæ± å……æ»¡ä¸º4.15V LDOæœ€å°è¾“å…¥åœ¨3.4V
 	if(bat_Voltage>0&&bat_Voltage<=100)
 	{
 		Voltage_dat=bat_Voltage;
 	}
 	if(bat_Voltage<=105){
 		//if(bat_Voltage>)
-		GUI_ClearRect(145,2,176,22);//Çå³ı³äµçÍ¼±êÄÚÇøÓò140£¬0
-		if(Voltage_dat>0&&Voltage_dat<=25){//1¸ñµç
+		GUI_ClearRect(145,2,176,22);//æ¸…é™¤å……ç”µå›¾æ ‡å†…åŒºåŸŸ140ï¼Œ0
+		if(Voltage_dat>0&&Voltage_dat<=25){//1æ ¼ç”µ
 			GUI_SetColor(GUI_RED);
-			GUI_ClearRect(283,7,308,18);//Çå³ıµç³ØÄÚÇøÓò
+			GUI_ClearRect(283,7,308,18);//æ¸…é™¤ç”µæ± å†…åŒºåŸŸ
 			GUI_FillPolygon(IN_Point1, 4, 270, 5);
 			GUI_SetColor(GUI_GREEN);
 			
 		}
-		if(Voltage_dat>25&&Voltage_dat<=50){//2¸ñµç
-			GUI_ClearRect(283,7,308,18);;//Çå³ıµç³ØÄÚÇøÓò
+		if(Voltage_dat>25&&Voltage_dat<=50){//2æ ¼ç”µ
+			GUI_ClearRect(283,7,308,18);;//æ¸…é™¤ç”µæ± å†…åŒºåŸŸ
 			GUI_FillPolygon(IN_Point1, 4, 270, 5);
 			GUI_FillPolygon(IN_Point2, 4, 270, 5);
 		}
-		if(Voltage_dat>50&&Voltage_dat<=75){//3¸ñµç
-			GUI_ClearRect(283,7,308,18);;//Çå³ıµç³ØÄÚÇøÓò
+		if(Voltage_dat>50&&Voltage_dat<=75){//3æ ¼ç”µ
+			GUI_ClearRect(283,7,308,18);;//æ¸…é™¤ç”µæ± å†…åŒºåŸŸ
 			GUI_FillPolygon(IN_Point1, 4, 270, 5);
 			GUI_FillPolygon(IN_Point2, 4, 270, 5);
 			GUI_FillPolygon(IN_Point3, 4, 270, 5);
 
 		}
-		if(Voltage_dat>75&&Voltage_dat<=100){//4¸ñµç
-			GUI_ClearRect(283,7,308,18);//Çå³ıµç³ØÄÚÇøÓò
+		if(Voltage_dat>75&&Voltage_dat<=100){//4æ ¼ç”µ
+			GUI_ClearRect(283,7,308,18);//æ¸…é™¤ç”µæ± å†…åŒºåŸŸ
 			GUI_FillPolygon(IN_Point1, 4, 270, 5);
 			GUI_FillPolygon(IN_Point2, 4, 270, 5);
 			GUI_FillPolygon(IN_Point3, 4, 270, 5);
 			GUI_FillPolygon(IN_Point4, 4, 270, 5);
 		}
 		
-		GUI_ClearRect(230,5,275,23);//Çå³ıµçÑ¹°Ù·Ö±ÈÇøÓò
+		GUI_ClearRect(230,5,275,23);//æ¸…é™¤ç”µå‹ç™¾åˆ†æ¯”åŒºåŸŸ
 		GUI_SetColor(GUI_WHITE);
 		GUI_DispStringAt("%", 260, 5);
 		if(Voltage_dat==100){
 			GUI_GotoXY(230, 5);
-			GUI_DispDec(Voltage_dat, 3);//ÏÔÊ¾3Î»°Ù·ÖÊı
+			GUI_DispDec(Voltage_dat, 3);//æ˜¾ç¤º3ä½ç™¾åˆ†æ•°
 		}
 		else
 		{
 			GUI_GotoXY(240, 5);
-			GUI_DispDec(Voltage_dat, 2);//ÏÔÊ¾2Î»°Ù·ÖÊı
+			GUI_DispDec(Voltage_dat, 2);//æ˜¾ç¤º2ä½ç™¾åˆ†æ•°
 		}
 	}
-	else{//USB½ÓÈë
+	else{//USBæ¥å…¥
 		
 		//GUI_DispStringAt("101%", 240, 5);
 		GUI_SetColor(GUI_LIGHTYELLOW);

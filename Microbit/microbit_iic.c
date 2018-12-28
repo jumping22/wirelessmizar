@@ -8,12 +8,12 @@
 
 /**************************    GUI define   *********************************/
 static void Router_Control(uint8_t ocmd, uint8_t *data, uint8_t length);
-//void myGUI_SetOptions(uint8_t cmd, uint8_t *data, uint8_t length);		//GUI …Ë÷√“™œ‘ æµƒπ¶ƒ‹œÓ
+//void myGUI_SetOptions(uint8_t cmd, uint8_t *data, uint8_t length);		//GUI ËÆæÁΩÆË¶ÅÊòæÁ§∫ÁöÑÂäüËÉΩÈ°π
 void GUI_Control(uint8_t ocmd, uint8_t *data, uint8_t length);
-void GUI_ShowSensorData(unsigned char num_Sensor);	//GUI÷–œ‘ æÀ˘”–¥´∏–∆˜ ˝æ›
-void GUI_TextOptions(uint8_t ocmd, uint8_t *data, uint8_t length);	//GUI Œƒ◊÷π¶ƒ‹
-void GUI_NumberOptions(uint8_t ocmd, uint8_t *data, uint8_t length);	//GUI  ˝◊÷π¶ƒ‹
-void GUI_2DGraphicsOptions(uint8_t ocmd, uint8_t *data, uint8_t length);	//GUI 2DÕº–Œπ¶ƒ‹
+void GUI_ShowSensorData(unsigned char num_Sensor);	//GUI‰∏≠ÊòæÁ§∫ÊâÄÊúâ‰º†ÊÑüÂô®Êï∞ÊçÆ
+void GUI_TextOptions(uint8_t ocmd, uint8_t *data, uint8_t length);	//GUI ÊñáÂ≠óÂäüËÉΩ
+void GUI_NumberOptions(uint8_t ocmd, uint8_t *data, uint8_t length);	//GUI Êï∞Â≠óÂäüËÉΩ
+void GUI_2DGraphicsOptions(uint8_t ocmd, uint8_t *data, uint8_t length);	//GUI 2DÂõæÂΩ¢ÂäüËÉΩ
 
 void Show_IR_Distance(void);
 void Show_IR_Remote(void);
@@ -37,6 +37,9 @@ extern PressEvent btn1_event;
 extern PressEvent btn2_event;
 extern PressEvent btn3_event;
 extern PressEvent btn4_event;
+
+extern uint32_t timer1 ;
+extern uint8_t nextpag_flg ;
 
 static uint8_t mb_recv_state = 0;
 static uint8_t mb_recv_buf[MB_RECV_BUF_SIZE];
@@ -87,19 +90,19 @@ static void microbit_sensor_deal(void)
 //		return;
 //	}
 	switch(buf[0]) {	//cmd
-		case 0xff : { //¬∑”…œ‡πÿ
+		case 0xff : { //Ë∑ØÁî±Áõ∏ÂÖ≥
 			uint8_t ocmd = buf[1];
 			uint8_t *data = &buf[2];
 			uint8_t dlength = length - 1;
 			Router_Control(ocmd, data, dlength);
 		}break;
 		
-		case 0: {	//4∏ˆ∞¥º¸÷µ
+		case 0: {	//4‰∏™ÊåâÈîÆÂÄº
 			uint8_t sendbuf[8] = {0xa5, 0x04, btn1_event, btn2_event, btn3_event, btn4_event, 0xff, 0};
 			I2C1_SetSendBuf(sendbuf, 7);
 		}break;
 		
-		case 1: {	//∫ÏÕ‚≤‚æ‡
+		case 1: {	//Á∫¢Â§ñÊµãË∑ù
 			uint8_t sendbuf[6] = {0xa5, 0x02, 0, 0, 0xff, 0};
 			IRdistance_struct ird = wireless->irdistance->get();
 			sendbuf[2] = ird.buf[0];
@@ -107,7 +110,7 @@ static void microbit_sensor_deal(void)
 			I2C1_SetSendBuf(sendbuf, 5);
 		}break;
 		
-		case 2: {	//∫ÏÕ‚“£øÿ∆˜
+		case 2: {	//Á∫¢Â§ñÈÅ•ÊéßÂô®
 			uint8_t sendbuf[8] = {0xa5, 0x04, 0, 0, 0, 0, 0xff, 0};
 			IRremote_struct irr = wireless->irremote->get();
 			sendbuf[2] = irr.buf[0];
@@ -117,7 +120,7 @@ static void microbit_sensor_deal(void)
 			I2C1_SetSendBuf(sendbuf, 7);
 		}break;
 		
-		case 3: {	//π‚√ÙµÁ◊Ë
+		case 3: {	//ÂÖâÊïèÁîµÈòª
 			uint8_t sendbuf[6] = {0xa5, 0x02, 0, 0, 0xff, 0};
 			PRS_struct prs = wireless->prs->get();
 			sendbuf[2] = prs.buf[0];
@@ -125,7 +128,7 @@ static void microbit_sensor_deal(void)
 			I2C1_SetSendBuf(sendbuf, 5);
 		}break;
 		
-		case 4: {	//Œ¬ ™∂»
+		case 4: {	//Ê∏©ÊπøÂ∫¶
 			uint8_t sendbuf[8] = {0xa5, 0x04, 0, 0, 0, 0, 0xff, 0};
 			DHT11_struct dht = wireless->dht11->get();
 			sendbuf[2] = dht.buf[0];
@@ -135,15 +138,15 @@ static void microbit_sensor_deal(void)
 			I2C1_SetSendBuf(sendbuf, 7);
 		}break;
 		
-		case 5: {	//»ÀÃÂ∫ÏÕ‚
+		case 5: {	//‰∫∫‰ΩìÁ∫¢Â§ñ
 			uint8_t sendbuf[5] = {0xa5, 0x02, 0, 0xff, 0};
 			PIR_struct pir = wireless->pir->get();
-			//sendbuf[2] = pir.buf[1];				//¡Ω∏ˆ◊÷Ω⁄µƒ ˝◊÷¡ø »°µ⁄∂˛∏ˆ”––ß◊÷Ω⁄
+			//sendbuf[2] = pir.buf[1];				//‰∏§‰∏™Â≠óËäÇÁöÑÊï∞Â≠óÈáè ÂèñÁ¨¨‰∫å‰∏™ÊúâÊïàÂ≠óËäÇ
 			sendbuf[2] = pir.digital;
 			I2C1_SetSendBuf(sendbuf, 4);
 		}break;
 		
-		case 6: {	//µÁŒª∆˜
+		case 6: {	//Áîµ‰ΩçÂô®
 			uint8_t sendbuf[6] = {0xa5, 0x02, 0, 0, 0xff, 0};
 			Potentiometer_struct rtt = wireless->potentiometer->get();
 			sendbuf[2] = rtt.buf[0];
@@ -151,28 +154,28 @@ static void microbit_sensor_deal(void)
 			I2C1_SetSendBuf(sendbuf, 5);
 		}break;
 		
-		case 7: {	//¥Û∞¥º¸
+		case 7: {	//Â§ßÊåâÈîÆ
 			uint8_t sendbuf[5] = {0xa5, 0x02, 0, 0xff, 0};
 			BigKey_struct key = wireless->bigkey->get();
-			sendbuf[2] = key.digital;				//¡Ω∏ˆ◊÷Ω⁄µƒ ˝◊÷¡ø »°µ⁄∂˛∏ˆ”––ß◊÷Ω⁄
+			sendbuf[2] = key.digital;				//‰∏§‰∏™Â≠óËäÇÁöÑÊï∞Â≠óÈáè ÂèñÁ¨¨‰∫å‰∏™ÊúâÊïàÂ≠óËäÇ
 			I2C1_SetSendBuf(sendbuf, 4);
 		}break;
 		
-		case 8: {	//GUI …Ë÷√
+		case 8: {	//GUI ËÆæÁΩÆ
 			uint8_t ocmd = buf[1];
 			uint8_t *data = &buf[2];
 			uint8_t dlength = length - 1;
 			GUI_Control(ocmd, data, dlength);
 		}break;
 		
-		case 9: {	//GUI Œƒ◊÷π¶ƒ‹
+		case 9: {	//GUI ÊñáÂ≠óÂäüËÉΩ
 			uint8_t ocmd = buf[1];
 			uint8_t *data = &buf[2];
 			uint8_t dlength = length - 1;
 			GUI_TextOptions(ocmd, data, dlength);
 		}break;
 		
-		case 10: {	//GUI œ‘ æ ˝◊÷
+		case 10: {	//GUI ÊòæÁ§∫Êï∞Â≠ó
 			uint8_t ocmd = buf[1];
 			uint8_t *data = &buf[2];
 			uint8_t dlength = length - 1;
@@ -180,7 +183,7 @@ static void microbit_sensor_deal(void)
 			GUI_DispStringAt("wqrrdewe",80,80);
 		}break;
 		
-		case 11: {	//GUI 2DÕº–Œπ¶ƒ‹
+		case 11: {	//GUI 2DÂõæÂΩ¢ÂäüËÉΩ
 			uint8_t ocmd = buf[1];
 			uint8_t *data = &buf[2];
 			uint8_t dlength = length - 1;
@@ -195,7 +198,7 @@ extern WirelessDevice_class *wireless;
 static void Router_Control(uint8_t ocmd, uint8_t *data, uint8_t length)
 {
 	switch (ocmd) {
-		case 0: {	//≤È—Ø ¬∑”…–≈œ¢
+		case 0: {	//Êü•ËØ¢ Ë∑ØÁî±‰ø°ÊÅØ
 			wireless->Router->router_init();
 			
 			ZProtoRouterInfo info = wireless->Router->router_getInfo();
@@ -208,7 +211,7 @@ static void Router_Control(uint8_t ocmd, uint8_t *data, uint8_t length)
 			I2C1_SetSendBuf(sendbuf, 9);
 		}break;
 		
-		case 1: { //…Ë÷√ ¬∑”…–≈œ¢
+		case 1: { //ËÆæÁΩÆ Ë∑ØÁî±‰ø°ÊÅØ
 			uint16_t id = *(data);
 			uint16_t panid = *(data+2);
 			uint8_t channel = *(data+4);
@@ -221,7 +224,7 @@ static void Router_Control(uint8_t ocmd, uint8_t *data, uint8_t length)
 			wireless->Router->router_setInfo(info);
 		}break;
 		
-		case 2: { //…Ë÷√ Ω⁄µ„–≈œ¢
+		case 2: { //ËÆæÁΩÆ ËäÇÁÇπ‰ø°ÊÅØ
 			uint16_t panid = *(data);
 			uint8_t channel = *(data+2);
 			
@@ -312,14 +315,18 @@ void GUI_ShowSensorData(unsigned char num_Sensor)
 void GUI_Control(uint8_t ocmd, uint8_t *data, uint8_t length)
 {
 	switch (ocmd) {
-		case 0: {	//πŸ∑Ω demo
+		case 0: {	//ÂÆòÊñπ demo
 			GUI_ShowSensorData(data[0]);
 		}break;
 		
-		case 1: {	//ø™πÿ”√ªßΩÁ√Ê±‡≥Ã
+		case 1: {	//ÂºÄÂÖ≥Áî®Êà∑ÁïåÈù¢ÁºñÁ®ã
 			user_gui_interface = data[0];
-			if (user_gui_interface == 1) {	//ø™∆Ù
+			if (user_gui_interface == 1) {	//ÂºÄÂêØ
 				GUI_Clear();
+			}
+			else{
+				timer1 = 0;
+				nextpag_flg = 0;
 			}
 		}break;
 	}
@@ -329,33 +336,33 @@ void GUI_Control(uint8_t ocmd, uint8_t *data, uint8_t length)
 void GUI_TextOptions(uint8_t ocmd, uint8_t *data, uint8_t length)
 {
 	switch (ocmd) {
-		case 0: {	//÷∏∂®◊¯±Íœ‘ æŒƒ◊÷
+		case 0: {	//ÊåáÂÆöÂùêÊ†áÊòæÁ§∫ÊñáÂ≠ó
 			uint16_t x = (uint16_t)(data[0]<<8) + data[1];
 			uint16_t y = (uint16_t)(data[2]<<8) + data[3];
 			char *text = (char*)(&data[0]);
 			GUI_DispStringAtCEOL(text, x, y);
 		}break;
 		
-		case 1: {	//Œƒ◊÷—’…´
+		case 1: {	//ÊñáÂ≠óÈ¢úËâ≤
 			uint8_t color = data[0];
 			GUI_SetColor(userColor_table[color]);
 			GUI_Clear();
 			//GUI_DispString("landzo! ");
 		}break;
 		
-		case 2: {	//Œƒ◊÷◊÷ÃÂ¥Û–°
+		case 2: {	//ÊñáÂ≠óÂ≠ó‰ΩìÂ§ßÂ∞è
 			uint8_t size = data[0];
 			GUI_SetFont(userSize_table[size]);
 			//GUI_DispString("landzo! ");
 		}break;
 		
-		case 3: {	//Œƒ◊÷œ‘ æƒ£ Ω
+		case 3: {	//ÊñáÂ≠óÊòæÁ§∫Ê®°Âºè
 			uint8_t text_mod = data[0];
 			GUI_SetTextMode(usertextmod_table[text_mod]);
 			//GUI_DispStringAt("wqrrdewe",20,20);
 		}break;
 		
-		case 4: {	//Œƒ±æ—˘ Ω
+		case 4: {	//ÊñáÊú¨Ê†∑Âºè
 			uint8_t text_sty = data[0];
 			GUI_SetTextStyle(usertextsty_table[text_sty]);
 			//GUI_DispStringAt("wqrrdewe",20,20);
@@ -370,7 +377,7 @@ void GUI_NumberOptions(uint8_t ocmd, uint8_t *data, uint8_t length)
 	uint16_t y = (uint16_t)(data[3]<<8) + (data[4]);
 	uint32_t num = (uint32_t)(data[5]<<24) + (uint32_t)(data[6]<<16) + (uint32_t)(data[7]<<8) + (uint32_t)(data[8]);
 	switch (jz) {
-		case 0: {}break;//÷∏∂®Œª÷√œ‘ æ 10/2/16Ω¯÷∆ ˝◊÷ ◊Ó¥Û4∏ˆ◊÷Ω⁄
+		case 0: {}break;//ÊåáÂÆö‰ΩçÁΩÆÊòæÁ§∫ 10/2/16ËøõÂà∂Êï∞Â≠ó ÊúÄÂ§ß4‰∏™Â≠óËäÇ
 		case 1:{ 
 			GUI_DispDecAt(num, x, y, 5);
 		}break;
@@ -383,29 +390,113 @@ void GUI_NumberOptions(uint8_t ocmd, uint8_t *data, uint8_t length)
 	}
 }
 
+static const unsigned drawmodesty_table[]={
+	0,
+	GUI_DM_NORMAL,
+	GUI_DM_XOR,
+};
+
+
+static const unsigned drawlinesty_table[]={
+	GUI_LS_SOLID ,
+	GUI_LS_DASH ,
+	GUI_LS_DOT,
+	GUI_LS_DASHDOT,
+	GUI_LS_DASHDOTDOT,
+};
+
+
 void GUI_2DGraphicsOptions(uint8_t ocmd, uint8_t *data, uint8_t length)
 {
-	//¥˝≤π≥‰
+	//ÂæÖË°•ÂÖÖ
 	switch (ocmd) {
-		case 0: {	//÷∏∂®◊¯±Íœ‘ æŒƒ◊÷
+		case 0: {	//ÊåáÂÆöÂùêÊ†áÊòæÁ§∫ÊñáÂ≠ó
 			
 		}break;
 		
-		case 1: {	//Œƒ◊÷—’…´
-			
+		case 1: {	//ËÆæÁΩÆËÉåÊôØÈ¢úËâ≤
+			uint8_t color = data[0];
+			GUI_SetBkColor(userColor_table[color]);
 		}break;
 		
-		case 2: {	//Œƒ◊÷◊÷ÃÂ¥Û–°
-			
+		case 2: {	//Ê∏ÖÂ±è
+			GUI_Clear();
 		}break;
 		
-		case 3: {	//Œƒ◊÷œ‘ æƒ£ Ω
-			
+		case 3: {	//ËÆæÁΩÆÁªòÂà∂Ê®°Âºè
+			uint8_t draw_mode = data[0];
+			GUI_SetDrawMode(drawmodesty_table[draw_mode]);
 		}break;
 		
-		case 4: {	//Œƒ±æ—˘ Ω
-			
+		case 4: {	//ËÆæÁΩÆÁîªÁ¨îÂ§ßÂ∞è
+			GUI_SetPenSize(data[0]);
 		}break;
+		
+		case 5: {	//ÁªòÂà∂Áü©ÂΩ¢
+			switch (data[0]){
+				case 0:{
+					uint8_t color0 = data[5];
+					uint8_t color1 = data[6];
+					GUI_DrawGradientH(data[1],data[2],data[3],data[4],userColor_table[color0],userColor_table[color1]);
+				}
+				
+				case 1:{
+					uint8_t color0 = data[5];
+					uint8_t color1 = data[6];
+					GUI_DrawGradientV(data[1],data[2],data[3],data[4],userColor_table[color0],userColor_table[color1]);
+				}
+				
+				case 2:{
+					uint8_t color0 = data[6];
+					uint8_t color1 = data[7];
+					GUI_DrawGradientRoundedH(data[1],data[2],data[3],data[4],data[5],userColor_table[color0],userColor_table[color1]);
+				}
+				
+				case 3:{
+					uint8_t color0 = data[6];
+					uint8_t color1 = data[7];
+					GUI_DrawGradientRoundedV(data[1],data[2],data[3],data[4],data[5],userColor_table[color0],userColor_table[color1]);
+				}
+				
+			}
+		}break;
+		
+		case 6: {	//ÁîªÁ∫ø
+			uint8_t line_sty = data[0];
+			GUI_SetLineStyle(drawlinesty_table[line_sty]);
+			GUI_DrawLine(data[1],data[2],data[3],data[4]);
+		}break;
+		
+		case 7: {	//ÁîªÂúÜ
+			if(data[0])//ÂÆûÂøÉ
+			{
+				GUI_FillCircle(data[1],data[2],data[3]);
+			}
+			else{//Á©∫ÂøÉ
+				GUI_DrawCircle(data[1],data[2],data[3]);
+			}
+		}break;
+		
+		case 8: {	//ÁîªÊ§≠ÂúÜ
+			if(data[0])//ÂÆûÂøÉ
+			{
+				GUI_FillEllipse(data[1],data[2],data[3],data[4]);
+			}
+			else{//Á©∫ÂøÉ
+				GUI_DrawEllipse(data[1],data[2],data[3],data[4]);
+			}
+		}break;
+		
+		case 9: {	//ÁîªÂºßÁ∫ø
+			GUI_DrawArc(data[0],data[1],data[2],data[3],data[4],data[5]);
+		}break;
+		
+		case 10: {	//ÁîªÈ•ºÂõæ
+			GUI_DrawPie(data[0],data[1],data[2],data[3],data[4],0);
+		}break;
+		
+		default : break;
+	
 	}
 }
 
@@ -415,7 +506,8 @@ void Show_IR_Distance(void)
 	GUI_SetColor(GUI_LIGHTBLUE);
 	GUI_FillRectEx(&Rect);
 	GUI_SetColor(GUI_RED);
-	GUI_DispStringInRectWrap("IR_Distance", &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
+	//GUI_DispStringInRectWrap("IR_Distance", &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
+	GUI_DispStringInRectWrap(str_Landzo, &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
 	Rect.x0 += 20;
 	Rect.y0 += 20;
 	//GUI_DispStringInRectWrap("somebody!!!", &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
@@ -432,7 +524,7 @@ void Show_IR_Remote(void)
 	GUI_SetColor(GUI_LIGHTBLUE);
 	GUI_FillRectEx(&Rect);
 	GUI_SetColor(GUI_RED);
-	GUI_DispStringInRectWrap("IR_Remote", &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
+	GUI_DispStringInRectWrap(str_IR_Remote, &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
 	Rect.x0 += 20;
 	Rect.y0 += 20;
 	//GUI_DispStringInRectWrap("somebody!!!", &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
@@ -448,7 +540,7 @@ void Show_PRS(void)
 	GUI_SetColor(GUI_LIGHTBLUE);
 	GUI_FillRectEx(&Rect);
 	GUI_SetColor(GUI_RED);
-	GUI_DispStringInRectWrap("PRS", &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
+	GUI_DispStringInRectWrap(str_PRS, &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
 	Rect.x0 += 20;
 	Rect.y0 += 20;
 	//GUI_DispStringInRectWrap("somebody!!!", &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
@@ -469,22 +561,22 @@ void Show_DHT11(void)
 		GUI_SetColor(GUI_MAGENTA);
 		Rect.x0 += 20;
 		if (i == 0){
-			GUI_DispStringInRectWrap("Landzo!!!", &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
+			GUI_DispStringInRectWrap(str_Landzo, &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
 		}
 		else if (i == 1){
 			
 			DHT11_struct show_dht11 = wireless->dht11->get();
-			GUI_DispStringInRectWrap("DHT11", &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
+			GUI_DispStringInRectWrap(str_Dht11, &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
 			Rect.x0 -= 20;
 			Rect.y0 += 20;
-			GUI_DispStringInRectWrap("Temp:", &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
+			GUI_DispStringInRectWrap(str_Dht11_temp, &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
 
 			GUI_GotoXY((Rect.x0+45), Rect.y0);
 			GUI_DispDec(show_dht11.temperature, 2);
 			//block5_x1 = Rect.x0;//
 			//block5_y1 = Rect.y0;
 			Rect.y0 += 20;
-			GUI_DispStringInRectWrap("Humi:", &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
+			GUI_DispStringInRectWrap(str_Dht11_humi, &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
 			GUI_GotoXY((Rect.x0 + 45), Rect.y0);
 			GUI_DispDec(show_dht11.humidity, 2);
 			//block5_x2 = Rect.x0;//
@@ -494,7 +586,7 @@ void Show_DHT11(void)
 
 		}
 		else{
-			GUI_DispStringInRectWrap("Landzo!!!", &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
+			GUI_DispStringInRectWrap(str_Landzo, &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
 		}
 		Rect.x0 -= 20;
 
@@ -508,7 +600,7 @@ void Show_PIR(void)
 	GUI_SetColor(GUI_LIGHTRED);
 	GUI_FillRectEx(&Rect);
 	GUI_SetColor(GUI_GREEN);
-	GUI_DispStringInRectWrap("PIR", &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
+	GUI_DispStringInRectWrap(str_PIR, &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
 	Rect.x0 += 20;
 	Rect.y0 += 20;
 	//GUI_DispStringInRectWrap("somebody!!!", &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
@@ -525,7 +617,7 @@ void Show_Potentiometer(void)
 	GUI_SetColor(GUI_LIGHTRED);
 	GUI_FillRectEx(&Rect);
 	GUI_SetColor(GUI_GREEN);
-	GUI_DispStringInRectWrap("Potentiometer", &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
+	GUI_DispStringInRectWrap(str_Potentiometer, &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
 	Rect.x0 += 20;
 	Rect.y0 += 20;
 	//GUI_DispStringInRectWrap("somebody!!!", &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
@@ -542,7 +634,7 @@ void Show_Large_Key(void)
 	GUI_SetColor(GUI_LIGHTRED);
 	GUI_FillRectEx(&Rect);
 	GUI_SetColor(GUI_GREEN);
-	GUI_DispStringInRectWrap("Large_Key", &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
+	GUI_DispStringInRectWrap(str_bigkey, &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);
 	Rect.x0 += 20;
 	Rect.y0 += 20;
 	//GUI_DispStringInRectWrap("somebody!!!", &Rect, GUI_TA_HORIZONTAL, GUI_WRAPMODE_WORD);

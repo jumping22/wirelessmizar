@@ -60,3 +60,4 @@
 .\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 .\main.o: ..\HARDWARE\PWM\pwm.h
 .\main.o: ..\HARDWARE\ADC\adc.h
+.\main.o: ..\HARDWARE\LCD\Font.h

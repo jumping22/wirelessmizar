@@ -21,20 +21,32 @@ Target DLL:      Segger\JL2CM3.dll V2.99.20.0
 Dialog DLL:      TCM.DLL V1.14.9.0
  
 <h2>Project:</h2>
-E:\无线米萨\无线米萨项目\程序代码\无线米萨主控器ILI9341 SPI程序STM32RE(V0.3)\ILI9341 SPI程序STM32 IO\USER\TOUCH.uvprojx
-Project File Date:  12/25/2018
+E:\wirelessmizar-stm32\USER\TOUCH.uvprojx
+Project File Date:  12/26/2018
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 2 (build 183)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'Target 1'
-".\TOUCH.axf" - 0 Error(s), 0 Warning(s).
+compiling microbit_iic.c...
+compiling main.c...
+..\HARDWARE\ADC\adc.h(13): warning:  #1295-D: Deprecated declaration Get_Adc - give arg types
+  u16  Get_Adc();
+..\HARDWARE\ADC\adc.h(14): warning:  #1295-D: Deprecated declaration Get_Voltage - give arg types
+  u16 Get_Voltage();
+main.c(140): warning:  #167-D: argument of type "void (*)(uint8_t)" is incompatible with parameter of type "i2c_recv_callback"
+  	I2C1_SetRecvCallback(microbit_recv_analyze);
+main.c: 3 warnings, 0 errors
+linking...
+Program Size: Code=55608 RO-data=28028 RW-data=856 ZI-data=12880  
+FromELF: creating hex file...
+".\TOUCH.axf" - 0 Error(s), 3 Warning(s).
 
 <h2>Collection of Component include folders:</h2>
-  E:\无线米萨\无线米萨项目\程序代码\无线米萨主控器ILI9341 SPI程序STM32RE(V0.3)\ILI9341 SPI程序STM32 IO\USER\RTE
+  E:\wirelessmizar-stm32\USER\RTE
   C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\Include
 
 <h2>Collection of Component Files used:</h2>
-Build Time Elapsed:  00:00:00
+Build Time Elapsed:  00:00:02
 </pre>
 </body>
 </html>

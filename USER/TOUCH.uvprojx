@@ -137,7 +137,7 @@
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3></Flash3>
+          <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -718,6 +718,11 @@
               <FileName>microbit_iic.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Microbit\microbit_iic.c</FilePath>
+            </File>
+            <File>
+              <FileName>FontSong.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Microbit\FontSong.c</FilePath>
             </File>
           </Files>
         </Group>

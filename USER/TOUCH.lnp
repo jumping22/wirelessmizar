@@ -53,7 +53,7 @@
 ".\enddevicenode.o"
 ".\hashtable.o"
 ".\microbit_iic.o"
-".\microbit_iic_guibulid.o"
+".\fontsong.o"
 ".\multi_button.o"
 --library_type=microlib --strict --scatter ".\TOUCH.sct"
 --summary_stderr --info summarysizes --map --xref --callgraph --symbols
